@@ -1,8 +1,11 @@
 package org.abpira.identity.service;
 
+import org.abpira.identity.exceptions.UserDoesNotExistsException;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.abpira.identity.dto.UserRequestDTO;
 import org.abpira.identity.dto.UserResponseDTO;
+import org.abpira.identity.exceptions.AddressMustNotBeEmptyException;
 import org.abpira.identity.exceptions.UserAlreadyExistsException;
 import org.abpira.identity.mapper.UserMapper;
 import org.abpira.identity.repository.AddressRepository;
@@ -19,26 +22,33 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
         userRepository.findByEmail(userRequestDTO.getEmail()).ifPresent(user -> {
             throw new UserAlreadyExistsException("User already exists");
         });
+        if (userRequestDTO.getAddresses() == null || userRequestDTO.getAddresses().isEmpty()) {
+            throw new AddressMustNotBeEmptyException("At least one address is required.");
+        }
         var user = UserMapper.mapToUser(userRequestDTO);
         user.setPassword(passwordEncryptionService.encryptPassword(user.getPassword()));
         user = userRepository.save(user);
-        if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
-            addressRepository.saveAll(user.getAddresses());
-        }
+
         return UserMapper.mapToUserResponseDTO(user);
     }
 
     @Override
     public UserResponseDTO getUser(Long id) {
-        return null;
+        var user = userRepository.findById(id).orElseThrow(() -> new UserDoesNotExistsException("User not found"));
+        return UserMapper.mapToUserResponseDTO(user);
     }
 
     @Override
     public Boolean checkUserExists(Long id) {
-        return null;
+
+        if (userRepository.existsById(id)) {
+            return true;
+        }
+        return false;
     }
 }

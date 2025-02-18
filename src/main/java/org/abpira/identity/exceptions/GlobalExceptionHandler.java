@@ -23,4 +23,26 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AddressMustNotBeEmptyException.class)
+    public ResponseEntity<ErrorResponseDTO> handleAddressMustNotBeEmptyException(AddressMustNotBeEmptyException ex,
+                                                                             WebRequest request) {
+        return new ResponseEntity<>(ErrorResponseDTO.builder()
+                .path(request.getDescription(false))
+                .status(HttpStatus.BAD_REQUEST)
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserDoesNotExistsException.class)
+    public ResponseEntity<ErrorResponseDTO> handleUserDoesNotExistsException(UserDoesNotExistsException ex,
+                                                                             WebRequest request) {
+        return new ResponseEntity<>(ErrorResponseDTO.builder()
+                .path(request.getDescription(false))
+                .status(HttpStatus.NOT_FOUND)
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build(), HttpStatus.NOT_FOUND);
+    }
 }

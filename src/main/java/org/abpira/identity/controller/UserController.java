@@ -20,12 +20,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUser(Long id) {
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
     @GetMapping("/exists/{id}")
-    public ResponseEntity<Boolean> checkUserExists(Long id) {
+    public ResponseEntity<Boolean> checkUserExists(@PathVariable Long id) {
         return ResponseEntity.ok(userService.checkUserExists(id));
     }
 }

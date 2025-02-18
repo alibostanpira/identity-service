@@ -18,17 +18,15 @@ public class UserMapper {
                 .email(userRequestDTO.getEmail())
                 .password(userRequestDTO.getPassword())
                 .build();
+        List<Address> addresses = userRequestDTO.getAddresses().stream()
+                .map(addressDTO -> {
+                    Address address = AddressMapper.mapToAddress(addressDTO);
+                    address.setUser(user);
+                    return address;
+                })
+                .collect(Collectors.toList());
+        user.setAddresses(addresses);
 
-        if (userRequestDTO.getAddresses() != null) {
-            List<Address> addresses = userRequestDTO.getAddresses().stream()
-                    .map(addressDTO -> {
-                        Address address = AddressMapper.mapToAddress(addressDTO);
-                        address.setUser(user);
-                        return address;
-                    })
-                    .collect(Collectors.toList());
-            user.setAddresses(addresses);
-        }
         return user;
     }
 
