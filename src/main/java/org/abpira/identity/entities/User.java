@@ -2,11 +2,14 @@ package org.abpira.identity.entities;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Setter
 @Getter

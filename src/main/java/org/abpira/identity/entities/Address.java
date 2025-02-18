@@ -2,12 +2,18 @@ package org.abpira.identity.entities;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 @Table(name = "addresses", indexes = {@Index(name = "idx_user_id", columnList = "userId")})
 public class Address extends BaseEntity {
 
